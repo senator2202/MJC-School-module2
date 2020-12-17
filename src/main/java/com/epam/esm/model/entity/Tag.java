@@ -1,6 +1,6 @@
 package com.epam.esm.model.entity;
 
-public class Tag extends GiftEntity{
+public class Tag implements GiftEntity {
     private long id;
     private String name;
 

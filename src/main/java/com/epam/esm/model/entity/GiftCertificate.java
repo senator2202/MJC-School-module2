@@ -1,19 +1,19 @@
 package com.epam.esm.model.entity;
 
-public class GiftCertificate extends GiftEntity{
-    private long id;
+public class GiftCertificate implements GiftEntity {
+    private Long id;
     private String name;
     private String description;
-    private int price;
-    private int duration;
+    private Integer price;
+    private Integer duration;
     private String createDate;
     private String lastUpdateDate;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -33,19 +33,19 @@ public class GiftCertificate extends GiftEntity{
         this.description = description;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

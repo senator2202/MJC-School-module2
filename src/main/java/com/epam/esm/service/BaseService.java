@@ -1,10 +1,10 @@
-package com.epam.esm.model.dao;
+package com.epam.esm.service;
 
 import com.epam.esm.model.entity.GiftEntity;
 
 import java.util.List;
 
-public interface BaseDao<T extends GiftEntity> {
+public interface BaseService<T extends GiftEntity> {
 
     T findById(long id);
 
