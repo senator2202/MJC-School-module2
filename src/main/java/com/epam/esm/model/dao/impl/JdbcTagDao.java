@@ -1,8 +1,10 @@
 package com.epam.esm.model.dao.impl;
 
+import com.epam.esm.model.dao.GiftCertificateTagDao;
 import com.epam.esm.model.dao.TagDao;
 import com.epam.esm.model.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.epam.esm.model.dao.impl.ColumnName.TAG_ID;
 import static com.epam.esm.model.dao.impl.ColumnName.TAG_NAME;
@@ -27,19 +30,34 @@ public class JdbcTagDao implements TagDao {
 
     private static final String SQL_SELECT_ALL_TAGS = "SELECT id, name FROM tag";
     private static final String SQL_SELECT_TAG = SQL_SELECT_ALL_TAGS + " WHERE id = ?";
+    private static final String SQL_SELECT_BY_NAME = SQL_SELECT_ALL_TAGS + " WHERE name = ?";
     private static final String SQL_INSERT = "INSERT INTO tag (name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE tag SET name = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM tag WHERE id = ?";
+
     private JdbcTemplate jdbcTemplate;
+    private GiftCertificateTagDao giftCertificateTagDao;
 
     @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Autowired
+    public void setGiftCertificateTagDao(GiftCertificateTagDao giftCertificateTagDao) {
+        this.giftCertificateTagDao = giftCertificateTagDao;
+    }
+
     @Override
-    public Tag findById(long id) {
-        return jdbcTemplate.queryForObject(SQL_SELECT_TAG, new Object[]{id}, new TagRowMapper());
+    public Optional<Tag> findById(long id) {
+        Optional<Tag> optional;
+        try {
+            Tag tag = jdbcTemplate.queryForObject(SQL_SELECT_TAG, new Object[]{id}, new TagRowMapper());
+            optional = Optional.of(tag);
+        } catch (EmptyResultDataAccessException e) {
+            optional = Optional.empty();
+        }
+        return optional;
     }
 
     @Override
@@ -63,18 +81,30 @@ public class JdbcTagDao implements TagDao {
             ps.setString(1, entity.getName());
             return ps;
         }, keyHolder);
-        return findById(keyHolder.getKey().longValue());
+        return findById(keyHolder.getKey().longValue()).get();
     }
 
     @Override
     public Tag update(Tag entity) {
         jdbcTemplate.update(SQL_UPDATE, entity.getName(), entity.getId());
-        return findById(entity.getId());
+        return findById(entity.getId()).get();
     }
 
     @Override
     public void delete(long id) {
         jdbcTemplate.update(SQL_DELETE, id);
+    }
+
+    @Override
+    public Optional<Tag> findByName(String name) {
+        Optional<Tag> optional;
+        try {
+            Tag tag = jdbcTemplate.queryForObject(SQL_SELECT_BY_NAME, new Object[]{name}, new TagRowMapper());
+            optional = Optional.of(tag);
+        } catch (EmptyResultDataAccessException e) {
+            optional = Optional.empty();
+        }
+        return optional;
     }
 
     private class TagRowMapper implements RowMapper<Tag> {

@@ -41,7 +41,7 @@ public class TagApiController {
     @ResponseBody
     public Tag update(@RequestBody Tag tag, @PathVariable long id) {
         tag.setId(id);
-        return service.update(tag);
+        return service.update(tag).orElse(null);
     }
 
     @DeleteMapping("/{id}")

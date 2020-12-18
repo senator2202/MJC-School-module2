@@ -41,7 +41,7 @@ public class GiftCertificateApiController {
     @ResponseBody
     public GiftCertificate update(@RequestBody GiftCertificate certificate, @PathVariable long id) {
         certificate.setId(id);
-        return service.update(certificate);
+        return service.update(certificate).orElse(null);
     }
 
     @DeleteMapping("/{id}")

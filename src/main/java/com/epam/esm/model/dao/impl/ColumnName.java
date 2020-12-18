@@ -11,4 +11,6 @@ class ColumnName {
 
     static final String TAG_ID = "id";
     static final String TAG_NAME = "name";
+
+    static final String CERTIFICATE_TAG_TAG_ID = "tag_id";
 }

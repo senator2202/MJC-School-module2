@@ -1,5 +1,8 @@
 package com.epam.esm.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GiftCertificate implements GiftEntity {
     private Long id;
     private String name;
@@ -8,6 +11,7 @@ public class GiftCertificate implements GiftEntity {
     private Integer duration;
     private String createDate;
     private String lastUpdateDate;
+    private List<Tag> tags;
 
     public Long getId() {
         return id;
@@ -63,5 +67,17 @@ public class GiftCertificate implements GiftEntity {
 
     public void setLastUpdateDate(String lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public List<Tag> getTags() {
+        return tags != null ? new ArrayList<>(tags) : null;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
     }
 }

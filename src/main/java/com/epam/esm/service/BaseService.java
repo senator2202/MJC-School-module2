@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.model.entity.GiftEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BaseService<T extends GiftEntity> {
 
@@ -12,7 +13,7 @@ public interface BaseService<T extends GiftEntity> {
 
     T add(T entity);
 
-    T update(T entity);
+    Optional<T> update(T entity);
 
     void delete(long id);
 }
