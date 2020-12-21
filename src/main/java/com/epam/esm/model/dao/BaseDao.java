@@ -1,7 +1,6 @@
 package com.epam.esm.model.dao;
 
 import com.epam.esm.model.entity.GiftEntity;
-import com.epam.esm.model.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;
