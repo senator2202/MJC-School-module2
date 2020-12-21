@@ -49,4 +49,28 @@ public class GiftCertificateApiController {
     public void delete(@PathVariable int id) {
         service.delete(id);
     }
+
+    @GetMapping("/find/tag/{tagName}")
+    @ResponseBody
+    public List<GiftCertificate> findByTagName(@PathVariable String tagName,
+                                               @RequestParam(value = "sort", required = false) String sortType,
+                                               @RequestParam(value = "direction", required = false) String direction) {
+        return service.findByTagName(tagName, sortType, direction);
+    }
+
+    @GetMapping("/find/name/{name}")
+    @ResponseBody
+    public List<GiftCertificate> findByName(@PathVariable String name,
+                                            @RequestParam(value = "sort", required = false) String sortType,
+                                            @RequestParam(value = "direction", required = false) String direction) {
+        return service.findByName(name, sortType, direction);
+    }
+
+    @GetMapping("/find/description/{description}")
+    @ResponseBody
+    public List<GiftCertificate> findByDescription(@PathVariable String description,
+                                                   @RequestParam(value = "sort", required = false) String sortType,
+                                                   @RequestParam(value = "direction", required = false) String direction) {
+        return service.findByDescription(description, sortType, direction);
+    }
 }

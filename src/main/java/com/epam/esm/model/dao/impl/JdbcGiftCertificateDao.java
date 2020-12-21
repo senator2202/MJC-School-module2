@@ -40,6 +40,18 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
             "UPDATE gift_certificate SET NAME = ?, description = ?, price = ?, duration = ?, last_update_date = ? \n" +
                     "WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM gift_certificate WHERE id = ?";
+    private static final String SQL_SELECT_CERTIFICATES_BY_TAG_NAME =
+            "SELECT gift_certificate.id, gift_certificate.name, description, " +
+                    "price, duration, create_date, last_update_date\n" +
+                    "FROM gift_certificate JOIN certificate_tag ON id=gift_certificate_id JOIN tag ON tag.id=tag_id\n" +
+                    "WHERE tag.name=?";
+    private static final String SQL_SELECT_BY_NAME =
+            "SELECT id, name, description, price, duration, create_date, last_update_date\n" +
+                    "FROM gift_certificate WHERE name LIKE ?";
+    private static final String SQL_SELECT_BY_DESCRIPTION =
+            "SELECT id, name, description, price, duration, create_date, last_update_date\n" +
+                    "FROM gift_certificate WHERE description LIKE ?";
+    private static final String PERCENT = "%";
 
     private JdbcTemplate jdbcTemplate;
     private TagDao tagDao;
@@ -79,22 +91,8 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     @Override
     @Transactional
     public List<GiftCertificate> findAll() {
-        List<GiftCertificate> certificates = new ArrayList<>();
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_SELECT_ALL_CERTIFICATES);
-        for (Map<String, Object> row : rows) {
-            GiftCertificate giftCertificate = new GiftCertificate();
-            giftCertificate.setId((Long) row.get(GIFT_CERTIFICATE_ID));
-            giftCertificate.setName((String) row.get(GIFT_CERTIFICATE_NAME));
-            giftCertificate.setDescription((String) row.get(GIFT_CERTIFICATE_DESCRIPTION));
-            giftCertificate.setPrice((Integer) row.get(GIFT_CERTIFICATE_PRICE));
-            giftCertificate.setDuration((Integer) row.get(GIFT_CERTIFICATE_DURATION));
-            giftCertificate.setCreateDate((String) row.get(GIFT_CERTIFICATE_CREATE_DATE));
-            giftCertificate.setLastUpdateDate((String) row.get(GIFT_CERTIFICATE_LAST_UPDATE_DATE));
-            List<Tag> tags = giftCertificateTagDao.findAllTags(giftCertificate.getId());
-            giftCertificate.setTags(tags);
-            certificates.add(giftCertificate);
-        }
-        return certificates;
+        return getGiftCertificates(rows);
     }
 
     @Override
@@ -148,6 +146,44 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
         giftCertificateTagDao.add(certificateId, addedTag.getId());
         return addedTag;
     }
+
+    @Override
+    public List<GiftCertificate> findByTagName(String tagName) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_SELECT_CERTIFICATES_BY_TAG_NAME, tagName);
+        return getGiftCertificates(rows);
+    }
+
+    @Override
+    public List<GiftCertificate> findByName(String name) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_SELECT_BY_NAME, PERCENT + name + PERCENT);
+        return getGiftCertificates(rows);
+    }
+
+    @Override
+    public List<GiftCertificate> findByDescription(String description) {
+        List<Map<String, Object>> rows =
+                jdbcTemplate.queryForList(SQL_SELECT_BY_DESCRIPTION, PERCENT + description + PERCENT);
+        return getGiftCertificates(rows);
+    }
+
+    private List<GiftCertificate> getGiftCertificates(List<Map<String, Object>> rows) {
+        List<GiftCertificate> certificates = new ArrayList<>();
+        for (Map<String, Object> row : rows) {
+            GiftCertificate giftCertificate = new GiftCertificate();
+            giftCertificate.setId((Long) row.get(GIFT_CERTIFICATE_ID));
+            giftCertificate.setName((String) row.get(GIFT_CERTIFICATE_NAME));
+            giftCertificate.setDescription((String) row.get(GIFT_CERTIFICATE_DESCRIPTION));
+            giftCertificate.setPrice((Integer) row.get(GIFT_CERTIFICATE_PRICE));
+            giftCertificate.setDuration((Integer) row.get(GIFT_CERTIFICATE_DURATION));
+            giftCertificate.setCreateDate((String) row.get(GIFT_CERTIFICATE_CREATE_DATE));
+            giftCertificate.setLastUpdateDate((String) row.get(GIFT_CERTIFICATE_LAST_UPDATE_DATE));
+            List<Tag> tags = giftCertificateTagDao.findAllTags(giftCertificate.getId());
+            giftCertificate.setTags(tags);
+            certificates.add(giftCertificate);
+        }
+        return certificates;
+    }
+
 
     private class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
 

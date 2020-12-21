@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `certificate_tag` (
   CONSTRAINT `FK_certificates_tags_tag` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы gift.certificate_tag: ~13 rows (приблизительно)
+-- Дамп данных таблицы gift.certificate_tag: ~12 rows (приблизительно)
 /*!40000 ALTER TABLE `certificate_tag` DISABLE KEYS */;
 REPLACE INTO `certificate_tag` (`gift_certificate_id`, `tag_id`) VALUES
 	(1, 8),
@@ -43,7 +43,8 @@ REPLACE INTO `certificate_tag` (`gift_certificate_id`, `tag_id`) VALUES
 	(7, 6),
 	(15, 3),
 	(15, 10),
-	(15, 9);
+	(15, 9),
+	(16, 2);
 /*!40000 ALTER TABLE `certificate_tag` ENABLE KEYS */;
 
 -- Дамп структуры для таблица gift.gift_certificate
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `gift_certificate` (
   `create_date` varchar(50) DEFAULT NULL,
   `last_update_date` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Дамп данных таблицы gift.gift_certificate: ~8 rows (приблизительно)
 /*!40000 ALTER TABLE `gift_certificate` DISABLE KEYS */;
@@ -69,7 +70,8 @@ REPLACE INTO `gift_certificate` (`id`, `name`, `description`, `price`, `duration
 	(6, 'Programming courses \'Java Web development\'', 'Become good programmer for short period', 400, 90, '2020-12-17T12:00Z', '2020-12-17T12:01Z'),
 	(7, 'Театр имени Янки Купалы', 'Посещение любого спектакля', 60, 14, '2020-12-18T07:11Z', '2020-12-18T10:05Z'),
 	(12, 'SilverScreen', 'Просмотр любого кинофильма', 15, 45, '2020-12-18T09:22Z', '2020-12-18T09:25Z'),
-	(15, 'Курсы английского языка', 'Курсы английского в online школе SkyEng', 150, 100, '2020-12-18T10:22Z', '2020-12-18T10:37Z');
+	(15, 'Курсы английского языка', 'Курсы английского в online школе SkyEng', 150, 100, '2020-12-18T10:22Z', '2020-12-18T10:37Z'),
+	(16, 'Тату салон "Imagine Dragon"', 'Бесплатная татуировка 12х12, + дизайн', 250, 90, '2020-12-21T12:21Z', '2020-12-21T12:21Z');
 /*!40000 ALTER TABLE `gift_certificate` ENABLE KEYS */;
 
 -- Дамп структуры для таблица gift.tag
@@ -77,20 +79,21 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE IF NOT EXISTS `tag` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Дамп данных таблицы gift.tag: ~8 rows (приблизительно)
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
 REPLACE INTO `tag` (`id`, `name`) VALUES
+	(9, '123123'),
 	(1, 'Активность'),
+	(10, 'Искусство'),
+	(7, 'Кино'),
 	(2, 'Красота'),
 	(3, 'Образование'),
-	(6, 'Театр'),
-	(7, 'Кино'),
 	(8, 'Отдых'),
-	(9, '123123'),
-	(10, 'Искусство');
+	(6, 'Театр');
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

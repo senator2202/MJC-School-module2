@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
@@ -83,7 +80,32 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         df.setTimeZone(tz);
-        String nowAsISO = df.format(new Date());
-        return nowAsISO;
+        return df.format(new Date());
+    }
+
+    @Override
+    public List<GiftCertificate> findByTagName(String tagName, String sortType, String direction) {
+        List<GiftCertificate> certificates = dao.findByTagName(tagName);
+        sortIfNecessary(certificates, sortType, direction);
+        return certificates;
+    }
+
+    @Override
+    public List<GiftCertificate> findByName(String name, String sortType, String direction) {
+        List<GiftCertificate> certificates = dao.findByName(name);
+        sortIfNecessary(certificates, sortType, direction);
+        return certificates;
+    }
+
+    @Override
+    public List<GiftCertificate> findByDescription(String description, String sortType, String direction) {
+        List<GiftCertificate> certificates = dao.findByDescription(description);
+        sortIfNecessary(certificates, sortType, direction);
+        return certificates;
+    }
+
+    private void sortIfNecessary(List<GiftCertificate> certificates, String sortType, String direction) {
+        Optional<Comparator<GiftCertificate>> optional = GiftCertificateComparatorProvider.provide(sortType, direction);
+        optional.ifPresent(certificates::sort);
     }
 }
