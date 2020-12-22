@@ -43,7 +43,6 @@ public class JdbcGiftCertificateTagDao implements GiftCertificateTagDao {
     }
 
     @Override
-    @Transactional
     public void deleteAllTags(long certificateId) {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_ALL_CERTIFICATE_TAGS_ID, certificateId);
         for (Map<String, Object> row : rows) {

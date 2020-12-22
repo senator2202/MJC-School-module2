@@ -1,6 +1,5 @@
 package com.epam.esm.model.dao.impl;
 
-import com.epam.esm.model.dao.GiftCertificateTagDao;
 import com.epam.esm.model.dao.TagDao;
 import com.epam.esm.model.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +35,10 @@ public class JdbcTagDao implements TagDao {
     private static final String SQL_DELETE = "DELETE FROM tag WHERE id = ?";
 
     private JdbcTemplate jdbcTemplate;
-    private GiftCertificateTagDao giftCertificateTagDao;
 
     @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Autowired
-    public void setGiftCertificateTagDao(GiftCertificateTagDao giftCertificateTagDao) {
-        this.giftCertificateTagDao = giftCertificateTagDao;
     }
 
     @Override
