@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.controller.exception.GiftCertificateNotFoundException;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class GiftCertificateApiController {
     @GetMapping("/{id}")
     @ResponseBody
     public GiftCertificate findById(@PathVariable long id) {
-        return service.findById(id);
+        return service.findById(id)
+                .orElseThrow(() ->
+                        new GiftCertificateNotFoundException("Gift certificate not found (id =" + id + ")"));
     }
 
     @PostMapping("/")
@@ -41,7 +44,9 @@ public class GiftCertificateApiController {
     @ResponseBody
     public GiftCertificate update(@RequestBody GiftCertificate certificate, @PathVariable long id) {
         certificate.setId(id);
-        return service.update(certificate).orElse(null);
+        return service.update(certificate)
+                .orElseThrow(() ->
+                        new GiftCertificateNotFoundException("Gift certificate not found (id =" + id + ")"));
     }
 
     @DeleteMapping("/{id}")

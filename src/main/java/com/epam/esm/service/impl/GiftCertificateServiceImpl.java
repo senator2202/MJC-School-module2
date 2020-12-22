@@ -22,8 +22,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificate findById(long id) {
-        return dao.findById(id).orElse(null);
+    public Optional<GiftCertificate> findById(long id) {
+        return dao.findById(id);
     }
 
     @Override

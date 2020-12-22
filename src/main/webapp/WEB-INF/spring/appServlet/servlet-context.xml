@@ -12,7 +12,9 @@
 
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="jsonPrefix" value="true"/>
+            </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 

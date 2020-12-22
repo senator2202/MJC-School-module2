@@ -28,8 +28,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag findById(long id) {
-        return dao.findById(id).orElse(null);
+    public Optional<Tag> findById(long id) {
+        return dao.findById(id);
     }
 
     @Override

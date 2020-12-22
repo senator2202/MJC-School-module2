@@ -3,8 +3,10 @@ package com.epam.esm.controller;
 import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +30,8 @@ public class TagApiController {
     @GetMapping("/{id}")
     @ResponseBody
     public Tag findById(@PathVariable long id) {
-        return service.findById(id);
+        return service.findById(id)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Gift certificate not found"));
     }
 
     @PostMapping("/")
