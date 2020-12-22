@@ -77,6 +77,10 @@ public class GiftCertificate implements GiftEntity {
         this.tags = tags;
     }
 
+    public void clearAllTags() {
+        tags = new ArrayList<>();
+    }
+
     public void addTag(Tag tag) {
         tags.add(tag);
     }
