@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.controller.exception.GiftEntityNotFoundException;
 import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ public class TagApiController {
     @GetMapping("/{id}")
     @ResponseBody
     public Tag findById(@PathVariable long id) {
-        return service.findById(id);
+        return service.findById(id).orElseThrow(() ->
+                new GiftEntityNotFoundException("Tag not found", ErrorCode.TAG_NOT_FOUND));
     }
 
     @PostMapping("/")
@@ -41,7 +43,8 @@ public class TagApiController {
     @ResponseBody
     public Tag update(@RequestBody Tag tag, @PathVariable long id) {
         tag.setId(id);
-        return service.update(tag).orElse(null);
+        return service.update(tag).orElseThrow(() ->
+                new GiftEntityNotFoundException("Tag not found", ErrorCode.TAG_NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
