@@ -6,12 +6,11 @@ import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.validator.GiftEntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("api/certificates")
 public class GiftCertificateApiController {
 
@@ -23,13 +22,11 @@ public class GiftCertificateApiController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<GiftCertificate> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id:^[1-9]\\d{0,18}$}")
-    @ResponseBody
     public GiftCertificate findById(@PathVariable long id) {
         return service.findById(id)
                 .orElseThrow(() ->
@@ -37,13 +34,11 @@ public class GiftCertificateApiController {
     }
 
     @PostMapping("/")
-    @ResponseBody
     public GiftCertificate create(@RequestBody GiftCertificate certificate) {
         return service.add(certificate);
     }
 
     @PutMapping("/{id:^[1-9]\\d{0,18}$}")
-    @ResponseBody
     public GiftCertificate update(@RequestBody GiftCertificate certificate, @PathVariable long id) {
         certificate.setId(id);
         return service.update(certificate)
@@ -52,13 +47,11 @@ public class GiftCertificateApiController {
     }
 
     @DeleteMapping("/{id:^[1-9]\\d{0,18}$}")
-    @ResponseBody
     public void delete(@PathVariable long id) {
         service.delete(id);
     }
 
     @GetMapping("/find/tag/{tagName}")
-    @ResponseBody
     public List<GiftCertificate> findByTagName(@PathVariable String tagName,
                                                @RequestParam(value = "sort", required = false) String sortType,
                                                @RequestParam(value = "direction", required = false) String direction) {
@@ -69,7 +62,6 @@ public class GiftCertificateApiController {
     }
 
     @GetMapping("/find/name/{name}")
-    @ResponseBody
     public List<GiftCertificate> findByName(@PathVariable String name,
                                             @RequestParam(value = "sort", required = false) String sortType,
                                             @RequestParam(value = "direction", required = false) String direction) {
@@ -80,7 +72,6 @@ public class GiftCertificateApiController {
     }
 
     @GetMapping("/find/description/{description}")
-    @ResponseBody
     public List<GiftCertificate> findByDescription(@PathVariable String description,
                                                    @RequestParam(value = "sort", required = false) String sortType,
                                                    @RequestParam(value = "direction", required = false) String direction) {
