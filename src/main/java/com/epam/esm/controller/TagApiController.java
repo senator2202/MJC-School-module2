@@ -30,7 +30,7 @@ public class TagApiController {
                 new GiftEntityNotFoundException("Tag not found", ErrorCode.TAG_NOT_FOUND));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Tag create(@RequestBody Tag tag) {
         return service.add(tag);
     }

@@ -91,8 +91,8 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getDescription());
-            ps.setInt(3, entity.getPrice());
-            ps.setInt(4, entity.getDuration());
+            ps.setInt(3, entity.getPrice() != null ? entity.getPrice() : 0);
+            ps.setInt(4, entity.getDuration() != null ? entity.getDuration() : 0);
             ps.setString(5, entity.getCreateDate());
             ps.setString(6, entity.getLastUpdateDate());
             return ps;

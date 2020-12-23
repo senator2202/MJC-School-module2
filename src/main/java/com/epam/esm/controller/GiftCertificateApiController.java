@@ -33,7 +33,7 @@ public class GiftCertificateApiController {
                         new GiftEntityNotFoundException("Certificate not found", ErrorCode.GIFT_CERTIFICATE_NOT_FOUND));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public GiftCertificate create(@RequestBody GiftCertificate certificate) {
         return service.add(certificate);
     }
