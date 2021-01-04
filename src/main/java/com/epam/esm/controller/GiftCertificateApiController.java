@@ -51,8 +51,8 @@ public class GiftCertificateApiController {
         service.delete(id);
     }
 
-    @GetMapping("/find/tag/{tagName}")
-    public List<GiftCertificate> findByTagName(@PathVariable String tagName,
+    @GetMapping("/find/tag")
+    public List<GiftCertificate> findByTagName(@RequestParam String tagName,
                                                @RequestParam(value = "sort", required = false) String sortType,
                                                @RequestParam(value = "direction", required = false) String direction) {
         if (!GiftEntityValidator.correctTagName(tagName)) {
@@ -61,8 +61,8 @@ public class GiftCertificateApiController {
         return service.findByTagName(tagName, sortType, direction);
     }
 
-    @GetMapping("/find/name/{name}")
-    public List<GiftCertificate> findByName(@PathVariable String name,
+    @GetMapping("/find/name")
+    public List<GiftCertificate> findByName(@RequestParam String name,
                                             @RequestParam(value = "sort", required = false) String sortType,
                                             @RequestParam(value = "direction", required = false) String direction) {
         if (!GiftEntityValidator.correctTagName(name)) {
@@ -71,8 +71,8 @@ public class GiftCertificateApiController {
         return service.findByName(name, sortType, direction);
     }
 
-    @GetMapping("/find/description/{description}")
-    public List<GiftCertificate> findByDescription(@PathVariable String description,
+    @GetMapping("/find/description")
+    public List<GiftCertificate> findByDescription(@RequestParam String description,
                                                    @RequestParam(value = "sort", required = false) String sortType,
                                                    @RequestParam(value = "direction", required = false) String direction) {
         if (!GiftEntityValidator.correctCertificateDescription(description)) {
