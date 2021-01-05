@@ -21,6 +21,17 @@ public class TagServiceImpl implements TagService {
     private GiftCertificateTagDao giftCertificateTagDao;
     private TransactionTemplate transactionTemplate;
 
+    public TagServiceImpl() {
+    }
+
+    public TagServiceImpl(TagDao dao,
+                          GiftCertificateTagDao giftCertificateTagDao,
+                          TransactionTemplate transactionTemplate) {
+        this.dao = dao;
+        this.giftCertificateTagDao = giftCertificateTagDao;
+        this.transactionTemplate = transactionTemplate;
+    }
+
     @Autowired
     public void setDao(TagDao dao) {
         this.dao = dao;

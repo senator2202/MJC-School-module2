@@ -25,6 +25,19 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private GiftCertificateTagDao giftCertificateTagDao;
     private TransactionTemplate transactionTemplate;
 
+    public GiftCertificateServiceImpl() {
+    }
+
+    public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao,
+                                      TagDao tagDao,
+                                      GiftCertificateTagDao giftCertificateTagDao,
+                                      TransactionTemplate transactionTemplate) {
+        this.giftCertificateDao = giftCertificateDao;
+        this.tagDao = tagDao;
+        this.giftCertificateTagDao = giftCertificateTagDao;
+        this.transactionTemplate = transactionTemplate;
+    }
+
     @Autowired
     public void setGiftCertificateDao(GiftCertificateDao giftCertificateDao) {
         this.giftCertificateDao = giftCertificateDao;
