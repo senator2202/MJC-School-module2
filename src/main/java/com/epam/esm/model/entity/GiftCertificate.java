@@ -14,6 +14,23 @@ public class GiftCertificate implements GiftEntity {
     private String lastUpdateDate;
     private List<Tag> tags;
 
+    public GiftCertificate() {
+    }
+
+    public GiftCertificate(GiftCertificate certificate) {
+        id = certificate.id;
+        name = certificate.name;
+        description = certificate.description;
+        price = certificate.price;
+        duration = certificate.duration;
+        createDate = certificate.createDate;
+        lastUpdateDate = certificate.lastUpdateDate;
+        if (certificate.getTags() != null) {
+            tags = new ArrayList<>();
+            certificate.getTags().forEach(t -> tags.add(new Tag(t.getId(), t.getName())));
+        }
+    }
+
     public Long getId() {
         return id;
     }
