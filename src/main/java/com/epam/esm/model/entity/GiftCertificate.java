@@ -2,6 +2,7 @@ package com.epam.esm.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GiftCertificate implements GiftEntity {
     private Long id;
@@ -12,6 +13,23 @@ public class GiftCertificate implements GiftEntity {
     private String createDate;
     private String lastUpdateDate;
     private List<Tag> tags;
+
+    public GiftCertificate() {
+    }
+
+    public GiftCertificate(GiftCertificate certificate) {
+        id = certificate.id;
+        name = certificate.name;
+        description = certificate.description;
+        price = certificate.price;
+        duration = certificate.duration;
+        createDate = certificate.createDate;
+        lastUpdateDate = certificate.lastUpdateDate;
+        if (certificate.getTags() != null) {
+            tags = new ArrayList<>();
+            certificate.getTags().forEach(t -> tags.add(new Tag(t.getId(), t.getName())));
+        }
+    }
 
     public Long getId() {
         return id;
@@ -77,7 +95,45 @@ public class GiftCertificate implements GiftEntity {
         this.tags = tags;
     }
 
+    public void clearAllTags() {
+        tags = new ArrayList<>();
+    }
+
     public void addTag(Tag tag) {
         tags.add(tag);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificate that = (GiftCertificate) o;
+        if (!Objects.equals(id, that.id)) {
+            return false;
+        }
+        if (!Objects.equals(name, that.name)) {
+            return false;
+        }
+        if (!Objects.equals(description, that.description)) {
+            return false;
+        }
+        if (!Objects.equals(price, that.price)) {
+            return false;
+        }
+        if (!Objects.equals(duration, that.duration)) {
+            return false;
+        }
+        return Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        return result;
     }
 }

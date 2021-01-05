@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BaseService<T extends GiftEntity> {
 
-    T findById(long id);
+    Optional<T> findById(long id);
 
     List<T> findAll();
 
@@ -15,5 +15,5 @@ public interface BaseService<T extends GiftEntity> {
 
     Optional<T> update(T entity);
 
-    void delete(long id);
+    boolean delete(long id);
 }
