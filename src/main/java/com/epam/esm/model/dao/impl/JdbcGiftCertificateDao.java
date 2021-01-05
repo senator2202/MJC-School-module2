@@ -108,8 +108,8 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     }
 
     @Override
-    public void delete(long id) {
-        jdbcTemplate.update(SQL_DELETE, id);
+    public boolean delete(long id) {
+        return jdbcTemplate.update(SQL_DELETE, id) > 0;
     }
 
     @Override

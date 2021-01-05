@@ -72,14 +72,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void delete(long id) {
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                giftCertificateTagDao.deleteByTagId(id);
-                dao.delete(id);
-            }
+    public boolean delete(long id) {
+        return transactionTemplate.execute(transactionStatus -> {
+            giftCertificateTagDao.deleteByTagId(id);
+            return dao.delete(id);
         });
-
     }
 }

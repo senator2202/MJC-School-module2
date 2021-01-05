@@ -9,8 +9,6 @@ import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.text.DateFormat;
@@ -136,15 +134,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void delete(long id) {
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                giftCertificateTagDao.deleteAllTags(id);
-                giftCertificateDao.delete(id);
-            }
+    public boolean delete(long id) {
+        return transactionTemplate.execute(transactionStatus -> {
+            giftCertificateTagDao.deleteAllTags(id);
+            return giftCertificateDao.delete(id);
         });
-
     }
 
     private String getCurrentDateIso() {
