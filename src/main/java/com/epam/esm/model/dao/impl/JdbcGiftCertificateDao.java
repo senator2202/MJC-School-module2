@@ -2,7 +2,6 @@ package com.epam.esm.model.dao.impl;
 
 import com.epam.esm.model.dao.GiftCertificateDao;
 import com.epam.esm.model.dao.GiftCertificateTagDao;
-import com.epam.esm.model.dao.TagDao;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.model.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +24,6 @@ import java.util.Optional;
 import static com.epam.esm.model.dao.impl.ColumnName.*;
 
 @Repository
-@Transactional
 public class JdbcGiftCertificateDao implements GiftCertificateDao {
 
     private static final String SQL_SELECT_ALL_CERTIFICATES =
@@ -43,7 +40,7 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     private static final String SQL_SELECT_CERTIFICATES_BY_TAG_NAME =
             "SELECT gift_certificate.id, gift_certificate.name, description, " +
                     "price, duration, create_date, last_update_date\n" +
-                    "FROM gift_certificate JOIN certificate_tag ON id=gift_certificate_id JOIN tag ON tag.id=tag_id\n" +
+                    "FROM gift_certificate JOIN certificate_tag ON gift_certificate.id=gift_certificate_id JOIN tag ON tag.id=tag_id\n" +
                     "WHERE tag.name=?";
     private static final String SQL_SELECT_BY_NAME =
             "SELECT id, name, description, price, duration, create_date, last_update_date\n" +
@@ -54,7 +51,6 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     private static final String PERCENT = "%";
 
     private JdbcTemplate jdbcTemplate;
-    private TagDao tagDao;
     private GiftCertificateTagDao giftCertificateTagDao;
 
     @Autowired
@@ -63,17 +59,11 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     }
 
     @Autowired
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
-    }
-
-    @Autowired
     public void setGiftCertificateTagDao(GiftCertificateTagDao giftCertificateTagDao) {
         this.giftCertificateTagDao = giftCertificateTagDao;
     }
 
     @Override
-    @Transactional
     public Optional<GiftCertificate> findById(long id) {
         Optional<GiftCertificate> optional;
         try {
@@ -89,62 +79,37 @@ public class JdbcGiftCertificateDao implements GiftCertificateDao {
     }
 
     @Override
-    @Transactional
     public List<GiftCertificate> findAll() {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_SELECT_ALL_CERTIFICATES);
         return getGiftCertificates(rows);
     }
 
     @Override
-    @Transactional
     public GiftCertificate add(GiftCertificate entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getDescription());
-            ps.setInt(3, entity.getPrice());
-            ps.setInt(4, entity.getDuration());
+            ps.setInt(3, entity.getPrice() != null ? entity.getPrice() : 0);
+            ps.setInt(4, entity.getDuration() != null ? entity.getDuration() : 0);
             ps.setString(5, entity.getCreateDate());
             ps.setString(6, entity.getLastUpdateDate());
             return ps;
         }, keyHolder);
-        long certificateId = keyHolder.getKey().longValue();
-        GiftCertificate giftCertificate = findById(certificateId).get();
-        for (Tag tag : entity.getTags()) {
-            Tag addedTag = addTag(giftCertificate.getId(), tag);
-            giftCertificate.addTag(addedTag);
-        }
         return findById(keyHolder.getKey().longValue()).get();
     }
 
     @Override
-    @Transactional
     public GiftCertificate update(GiftCertificate entity) {
         jdbcTemplate.update(SQL_UPDATE, entity.getName(), entity.getDescription(),
                 entity.getPrice(), entity.getDuration(), entity.getLastUpdateDate(), entity.getId());
-        giftCertificateTagDao.deleteAllTags(entity.getId());
-        List<Tag> tags = entity.getTags();
-        if (tags != null && !tags.isEmpty()) {
-            for (Tag tag : entity.getTags()) {
-                addTag(entity.getId(), tag);
-            }
-        }
         return findById(entity.getId()).get();
     }
 
     @Override
-    @Transactional
-    public void delete(long id) {
-        giftCertificateTagDao.deleteAllTags(id);
-        jdbcTemplate.update(SQL_DELETE, id);
-    }
-
-    private Tag addTag(long certificateId, Tag tag) {
-        Optional<Tag> optionalTag = tagDao.findByName(tag.getName());
-        Tag addedTag = optionalTag.orElseGet(() -> tagDao.add(tag));
-        giftCertificateTagDao.add(certificateId, addedTag.getId());
-        return addedTag;
+    public boolean delete(long id) {
+        return jdbcTemplate.update(SQL_DELETE, id) > 0;
     }
 
     @Override
