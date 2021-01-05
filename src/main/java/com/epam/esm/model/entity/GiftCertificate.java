@@ -106,12 +106,6 @@ public class GiftCertificate implements GiftEntity {
         if (!Objects.equals(duration, that.duration)) {
             return false;
         }
-        if (!Objects.equals(createDate, that.createDate)) {
-            return false;
-        }
-        if (!Objects.equals(lastUpdateDate, that.lastUpdateDate)) {
-            return false;
-        }
         return Objects.equals(tags, that.tags);
     }
 
@@ -122,8 +116,6 @@ public class GiftCertificate implements GiftEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         return result;
     }
