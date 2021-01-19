@@ -10,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.CollectionUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
+
+    private static final String DASH = "-";
+    private static final String UNDER_SCOPE = "_";
 
     private GiftCertificateDao giftCertificateDao;
     private TagDao tagDao;
@@ -62,8 +67,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return giftCertificateDao.findAll();
+    public List<GiftCertificate> findAll(String name,
+                                         String description,
+                                         String tagName,
+                                         String sortType,
+                                         String direction) {
+        if (sortType != null) {
+            sortType = sortType.replace(DASH, UNDER_SCOPE);
+        }
+        return giftCertificateDao.findAll(name, description, tagName, sortType, direction);
     }
 
     @Override
@@ -79,7 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private void addTags(GiftCertificate added, List<Tag> tags) {
-        if (tags != null && !tags.isEmpty()) {
+        if (!CollectionUtils.isEmpty(tags)) {
             for (Tag tag : tags) {
                 Tag addedTag = addTag(added.getId(), tag);
                 added.addTag(addedTag);
@@ -90,7 +102,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private Tag addTag(long certificateId, Tag tag) {
         Optional<Tag> optionalTag = tagDao.findByName(tag.getName());
         Tag addedTag = optionalTag.orElseGet(() -> tagDao.add(tag));
-        giftCertificateTagDao.add(certificateId, addedTag.getId());
+        if (!giftCertificateTagDao.certificateHasTag(certificateId, addedTag.getId())) {
+            giftCertificateTagDao.add(certificateId, addedTag.getId());
+        }
         return addedTag;
     }
 
@@ -100,11 +114,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (optional.isPresent()) {
             GiftCertificate found = optional.get();
             updateNotEmptyFields(certificate, found);
-            certificate.setLastUpdateDate(getCurrentDateIso());
+            found.setLastUpdateDate(getCurrentDateIso());
             GiftCertificate updated = transactionTemplate.execute(transactionStatus -> {
                 GiftCertificate updating = giftCertificateDao.update(found);
                 if (certificate.getTags() != null) {
-                    giftCertificateTagDao.deleteAllTags(updating.getId());
                     updating.clearAllTags();
                     addTags(updating, certificate.getTags());
                 }
@@ -142,35 +155,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private String getCurrentDateIso() {
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        df.setTimeZone(tz);
-        return df.format(new Date());
-    }
-
-    @Override
-    public List<GiftCertificate> findByTagName(String tagName, String sortType, String direction) {
-        List<GiftCertificate> certificates = giftCertificateDao.findByTagName(tagName);
-        sortIfNecessary(certificates, sortType, direction);
-        return certificates;
-    }
-
-    @Override
-    public List<GiftCertificate> findByName(String name, String sortType, String direction) {
-        List<GiftCertificate> certificates = giftCertificateDao.findByName(name);
-        sortIfNecessary(certificates, sortType, direction);
-        return certificates;
-    }
-
-    @Override
-    public List<GiftCertificate> findByDescription(String description, String sortType, String direction) {
-        List<GiftCertificate> certificates = giftCertificateDao.findByDescription(description);
-        sortIfNecessary(certificates, sortType, direction);
-        return certificates;
-    }
-
-    private void sortIfNecessary(List<GiftCertificate> certificates, String sortType, String direction) {
-        Optional<Comparator<GiftCertificate>> optional = GiftCertificateComparatorProvider.provide(sortType, direction);
-        optional.ifPresent(certificates::sort);
+        return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

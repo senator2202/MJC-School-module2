@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `gift_certificate` (
                                                   `id` bigint NOT NULL AUTO_INCREMENT,
                                                   `name` varchar(50) NOT NULL,
                                                   `description` varchar(250) DEFAULT NULL,
-                                                  `price` int DEFAULT NULL,
+                                                  `price` decimal(10,2) DEFAULT NULL,
                                                   `duration` int DEFAULT NULL,
                                                   `create_date` varchar(50) DEFAULT NULL,
                                                   `last_update_date` varchar(50) DEFAULT NULL

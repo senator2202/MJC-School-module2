@@ -23,6 +23,8 @@ public class JdbcGiftCertificateTagDao implements GiftCertificateTagDao {
     private static final String SQL_ALL_CERTIFICATE_TAGS =
             "SELECT id, name FROM certificate_tag JOIN tag ON tag_id = id WHERE gift_certificate_id = ?";
     private static final String SQL_DELETE_BY_TAG_ID = "DELETE FROM certificate_tag WHERE tag_id = ?";
+    private static final String SQL_CERTIFICATE_HAS_TAG =
+            "SELECT gift_certificate_id, tag_id FROM certificate_tag WHERE gift_certificate_id = ? AND tag_id = ?";
 
 
     private JdbcTemplate jdbcTemplate;
@@ -57,7 +59,7 @@ public class JdbcGiftCertificateTagDao implements GiftCertificateTagDao {
     }
 
     @Override
-    public List<Tag> findAllTags(long certificateId) {
+    public List<Tag> findAllTagsForCertificate(long certificateId) {
         List<Tag> tags = new ArrayList<>();
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL_ALL_CERTIFICATE_TAGS, certificateId);
         for (Map<String, Object> row : rows) {
@@ -66,5 +68,10 @@ public class JdbcGiftCertificateTagDao implements GiftCertificateTagDao {
             tags.add(new Tag(tagId, tagName));
         }
         return tags;
+    }
+
+    @Override
+    public boolean certificateHasTag(long certificateId, long tagId) {
+        return !jdbcTemplate.queryForList(SQL_CERTIFICATE_HAS_TAG, certificateId, tagId).isEmpty();
     }
 }

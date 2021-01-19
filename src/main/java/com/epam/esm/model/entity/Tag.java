@@ -2,24 +2,18 @@ package com.epam.esm.model.entity;
 
 import java.util.Objects;
 
-public class Tag implements GiftEntity {
-    private long id;
+/**
+ * Entity, representing tag of gift certificate.
+ */
+public class Tag extends GiftEntity {
     private String name;
 
     public Tag() {
     }
 
-    public Tag(long id, String name) {
+    public Tag(Long id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -39,7 +33,7 @@ public class Tag implements GiftEntity {
             return false;
         }
         Tag tag = (Tag) o;
-        if (id != tag.id) {
+        if (!id.equals(tag.id)) {
             return false;
         }
         return Objects.equals(name, tag.name);

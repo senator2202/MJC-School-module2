@@ -51,14 +51,14 @@ class JdbcTagDaoTest {
     @Test
     void findAll() {
         List<Tag> allTags = tagDao.findAll();
-        assertEquals(10, allTags.size());
+        assertEquals(9, allTags.size());
     }
 
     @Test
     void add() {
         tagDao.add(new Tag(255L, "NewTag"));
         List<Tag> allTags = tagDao.findAll();
-        assertEquals(11, allTags.size());
+        assertEquals(10, allTags.size());
     }
 
     @Test

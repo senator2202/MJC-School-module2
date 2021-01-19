@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * GiftCertificate api controller.
+ */
 @RestController
 @RequestMapping("api/certificates")
 public class GiftCertificateApiController {
@@ -21,11 +24,25 @@ public class GiftCertificateApiController {
         this.service = service;
     }
 
+    /**
+     * End point for findAllGiftCertificates request.
+     * Optionally could be used with different parameters for filtering and sorting.
+     */
     @GetMapping
-    public List<GiftCertificate> findAll() {
-        return service.findAll();
+    public List<GiftCertificate> findAll(@RequestParam(value = "name", required = false) String name,
+                                         @RequestParam(value = "description", required = false) String description,
+                                         @RequestParam(value = "tag", required = false) String tagName,
+                                         @RequestParam(value = "sort", required = false) String sortType,
+                                         @RequestParam(value = "direction", required = false) String direction) {
+        if (!GiftEntityValidator.correctOptionalParameters(name, description, tagName, sortType, direction)) {
+            throw new WrongParameterFormatException("Wrong optional parameters", ErrorCode.WRONG_OPTIONAL_PARAMETERS);
+        }
+        return service.findAll(name, description, tagName, sortType, direction);
     }
 
+    /**
+     * End point for finding gift certificate by id request.
+     */
     @GetMapping("/{id:^[1-9]\\d{0,18}$}")
     public GiftCertificate findById(@PathVariable long id) {
         return service.findById(id)
@@ -33,11 +50,17 @@ public class GiftCertificateApiController {
                         new GiftEntityNotFoundException("Certificate not found", ErrorCode.GIFT_CERTIFICATE_NOT_FOUND));
     }
 
+    /**
+     * End point for adding new gift certificate request.
+     */
     @PostMapping
     public GiftCertificate create(@RequestBody GiftCertificate certificate) {
         return service.add(certificate);
     }
 
+    /**
+     * End point for updating gift certificate request.
+     */
     @PutMapping("/{id:^[1-9]\\d{0,18}$}")
     public GiftCertificate update(@RequestBody GiftCertificate certificate, @PathVariable long id) {
         certificate.setId(id);
@@ -46,38 +69,11 @@ public class GiftCertificateApiController {
                         new GiftEntityNotFoundException("Certificate not found", ErrorCode.GIFT_CERTIFICATE_NOT_FOUND));
     }
 
+    /**
+     * End point for deleting gift certificate request.
+     */
     @DeleteMapping("/{id:^[1-9]\\d{0,18}$}")
-    public void delete(@PathVariable long id) {
-        service.delete(id);
-    }
-
-    @GetMapping("/find/tag/{tagName}")
-    public List<GiftCertificate> findByTagName(@PathVariable String tagName,
-                                               @RequestParam(value = "sort", required = false) String sortType,
-                                               @RequestParam(value = "direction", required = false) String direction) {
-        if (!GiftEntityValidator.correctTagName(tagName)) {
-            throw new WrongParameterFormatException("Wrong tag name format", ErrorCode.NAME_WRONG_FORMAT);
-        }
-        return service.findByTagName(tagName, sortType, direction);
-    }
-
-    @GetMapping("/find/name/{name}")
-    public List<GiftCertificate> findByName(@PathVariable String name,
-                                            @RequestParam(value = "sort", required = false) String sortType,
-                                            @RequestParam(value = "direction", required = false) String direction) {
-        if (!GiftEntityValidator.correctTagName(name)) {
-            throw new WrongParameterFormatException("Wrong certificate name format", ErrorCode.NAME_WRONG_FORMAT);
-        }
-        return service.findByName(name, sortType, direction);
-    }
-
-    @GetMapping("/find/description/{description}")
-    public List<GiftCertificate> findByDescription(@PathVariable String description,
-                                                   @RequestParam(value = "sort", required = false) String sortType,
-                                                   @RequestParam(value = "direction", required = false) String direction) {
-        if (!GiftEntityValidator.correctCertificateDescription(description)) {
-            throw new WrongParameterFormatException("Wrong certificate name format", ErrorCode.DESCRIPTION_WRONG_FORMAT);
-        }
-        return service.findByDescription(description, sortType, direction);
+    public Boolean delete(@PathVariable long id) {
+        return service.delete(id);
     }
 }

@@ -3,7 +3,7 @@ package com.epam.esm.controller.exception;
 public abstract class AbstractRuntimeException extends RuntimeException {
     protected int errorCode;
 
-    public AbstractRuntimeException(String message) {
+    protected AbstractRuntimeException(String message) {
         super(message);
     }
 

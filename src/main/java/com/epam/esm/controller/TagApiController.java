@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Tag api controller.
+ */
 @RestController
 @RequestMapping("api/tags")
 public class TagApiController {
@@ -19,22 +22,34 @@ public class TagApiController {
         this.service = service;
     }
 
+    /**
+     * End point for findAllTags request.
+     */
     @GetMapping
     public List<Tag> findAll() {
         return service.findAll();
     }
 
+    /**
+     * End point for finding tag by id request.
+     */
     @GetMapping("/{id}")
     public Tag findById(@PathVariable long id) {
         return service.findById(id).orElseThrow(() ->
                 new GiftEntityNotFoundException("Tag not found", ErrorCode.TAG_NOT_FOUND));
     }
 
+    /**
+     * End point for adding new tag request.
+     */
     @PostMapping
     public Tag create(@RequestBody Tag tag) {
         return service.add(tag);
     }
 
+    /**
+     * End point for updating tag request.
+     */
     @PutMapping("/{id}")
     public Tag update(@RequestBody Tag tag, @PathVariable long id) {
         tag.setId(id);
@@ -42,6 +57,9 @@ public class TagApiController {
                 new GiftEntityNotFoundException("Tag not found", ErrorCode.TAG_NOT_FOUND));
     }
 
+    /**
+     * End point for deleting tag request.
+     */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) {
         service.delete(id);

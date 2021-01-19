@@ -1,20 +1,24 @@
 package com.epam.esm.model.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class GiftCertificate implements GiftEntity {
-    private Long id;
+/**
+ * Entity, representing gift certificate .
+ */
+public class GiftCertificate extends GiftEntity {
     private String name;
     private String description;
-    private Integer price;
+    private BigDecimal price;
     private Integer duration;
     private String createDate;
     private String lastUpdateDate;
     private List<Tag> tags;
 
     public GiftCertificate() {
+
     }
 
     public GiftCertificate(GiftCertificate certificate) {
@@ -29,14 +33,6 @@ public class GiftCertificate implements GiftEntity {
             tags = new ArrayList<>();
             certificate.getTags().forEach(t -> tags.add(new Tag(t.getId(), t.getName())));
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -55,11 +51,11 @@ public class GiftCertificate implements GiftEntity {
         this.description = description;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -88,7 +84,7 @@ public class GiftCertificate implements GiftEntity {
     }
 
     public List<Tag> getTags() {
-        return tags != null ? new ArrayList<>(tags) : null;
+        return tags;
     }
 
     public void setTags(List<Tag> tags) {

@@ -37,35 +37,40 @@ class JdbcGiftCertificateTagDaoTest {
 
     @Test
     void add() {
-        giftCertificateTagDao.add(1L, 15L);
-        List<Tag> tags = giftCertificateTagDao.findAllTags(1L);
-        assertTrue(tags.contains(new Tag(15L, "Программирование")));
+        giftCertificateTagDao.add(1L, 14L);
+        List<Tag> tags = giftCertificateTagDao.findAllTagsForCertificate(1L);
+        assertTrue(tags.contains(new Tag(14L, "IT")));
     }
 
     @Test
     void delete() {
         giftCertificateTagDao.delete(1L, 8L);
-        List<Tag> tags = giftCertificateTagDao.findAllTags(1L);
+        List<Tag> tags = giftCertificateTagDao.findAllTagsForCertificate(1L);
         assertFalse(tags.contains(new Tag(8L, "Отдых")));
     }
 
     @Test
     void deleteAllTags() {
         giftCertificateTagDao.deleteAllTags(1L);
-        List<Tag> tags = giftCertificateTagDao.findAllTags(1L);
+        List<Tag> tags = giftCertificateTagDao.findAllTagsForCertificate(1L);
         assertTrue(tags.isEmpty());
     }
 
     @Test
     void deleteByTagId() {
         giftCertificateTagDao.deleteByTagId(1L);
-        List<Tag> tags = giftCertificateTagDao.findAllTags(1L);
+        List<Tag> tags = giftCertificateTagDao.findAllTagsForCertificate(1L);
         assertEquals(1, tags.size());
     }
 
     @Test
     void findAllTags() {
-        List<Tag> tags = giftCertificateTagDao.findAllTags(1L);
+        List<Tag> tags = giftCertificateTagDao.findAllTagsForCertificate(1L);
         assertEquals(2, tags.size());
+    }
+
+    @Test
+    void certificateHasTag() {
+        assertTrue(giftCertificateTagDao.certificateHasTag(1L, 8L));
     }
 }
