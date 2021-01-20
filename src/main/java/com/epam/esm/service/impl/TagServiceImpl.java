@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag add(Tag entity) {
-        return dao.add(entity);
+        return dao.findByName(entity.getName()).orElseGet(() -> dao.add(entity));
     }
 
     @Override
