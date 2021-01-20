@@ -6,11 +6,11 @@ import com.epam.esm.model.dao.TagDao;
 import com.epam.esm.model.entity.GiftCertificate;
 import com.epam.esm.model.entity.Tag;
 import com.epam.esm.service.GiftCertificateService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,7 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private void addTags(GiftCertificate added, List<Tag> tags) {
-        if (!CollectionUtils.isEmpty(tags)) {
+        if (CollectionUtils.isNotEmpty(tags)) {
             for (Tag tag : tags) {
                 Tag addedTag = addTag(added.getId(), tag);
                 added.addTag(addedTag);
